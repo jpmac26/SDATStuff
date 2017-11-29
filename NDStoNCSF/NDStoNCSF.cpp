@@ -35,12 +35,12 @@
 #include "NCSF.h"
 #include "TimerTrack.h"
 
-static const std::string NDSTONCSF_VERSION = "1.7";
+static const std::string NDSTONCSF_VERSION = "1.7.1";
 
-enum { UNKNOWN, HELP, VERBOSE, TIME, FADELOOP, FADEONESHOT, EXCLUDE, INCLUDE, AUTO, CREATE_SMAP, USE_SMAP, NOCOPY };
+enum { UNKNOWN, HELP, VERBOSE, TIME, FADELOOP, FADEONESHOT, EXCLUDE, INCLUDE, AUTO, CREATE_SMAP, USE_SMAP, NOCOPY, RENAME };
 const option::Descriptor opts[] =
 {
-	option::Descriptor(UNKNOWN, 0, "", "", option::Arg::None, "NDS to NCSF v" + NDSTONCSF_VERSION + "\nBy Naram Qashat (CyberBotX) [cyberbotx@cyberbotx.com]\n\n"
+	option::Descriptor(UNKNOWN, 0, "", "", option::Arg::None, "NDS to NCSF v" + NDSTONCSF_VERSION + "\nBy Naram Qashat (CyberBotX) [cyberbotx@cyberbotx.com]\nand James Pelster (jpmac26 / CaptainSwag101)\n\n"
 		"NDS to NCSF will take the incoming NDS ROM and create a series of NCSF files. If there is only a single SSEQ within the entire ROM, then there will be a "
 			"single NCSF file. Otherwise, there will be an NCSFLIB and multiple MININCSFs.\n\n"
 		"Usage:\n"
@@ -62,6 +62,7 @@ const option::Descriptor opts[] =
 	option::Descriptor(USE_SMAP, 0, "S", "use-smap", RequireArgument,
 		"  --use-smap=<filename> \v          -S <filename> \tUses the given SMAP-like file to determine what files to include/exclude."),
 	option::Descriptor(NOCOPY, 0, "n", "nocopy", option::Arg::None, "  --nocopy,-n \tDo not check for previous files in the destination directory."),
+	option::Descriptor(RENAME, 0, "r", "rename", option::Arg::None, "  --rename,-r \tPrepend the song number to miniNCSF filenames. Use this if multiple songs share the same filename."),
 	option::Descriptor(UNKNOWN, 0, "", "", option::Arg::None,
 		"\nVerbose output will output the NCSFs created. If given more than once, verbose output will also output duplicates found during the SDAT stripping step."
 		"\n\nExcluded and included files will be processed in the order they are given on the command line, later arguments overriding earlier arguments. If there is more "
@@ -569,7 +570,12 @@ int main(int argc, char *argv[])
 			{
 				if (!finalSDAT.infoSection.SEQrecord.entryOffsets[i])
 					continue;
-				std::string minincsfFilename = finalSDAT.infoSection.SEQrecord.entries[i].sseq->filename + ".minincsf";
+
+				std::string minincsfFilename;
+				if (options[RENAME])
+					minincsfFilename = finalSDAT.infoSection.SEQrecord.entries[i].sseq->filename + ".minincsf";
+				else
+					minincsfFilename = finalSDAT.infoSection.SEQrecord.entries[i].sseq->origFilename + ".minincsf";
 				auto reservedData = IntToLEVector<uint32_t>(i);
 
 				TagList thisTags = tags;
@@ -585,7 +591,9 @@ int main(int argc, char *argv[])
 					thisTags["ncsfby"] = "NDS to NCSF";
 				}
 
-				thisTags["origFilename"] = finalSDAT.infoSection.SEQrecord.entries[i].sseq->origFilename;
+				if (options[RENAME])
+					thisTags["origFilename"] = finalSDAT.infoSection.SEQrecord.entries[i].sseq->origFilename;
+
 				if (sdatNumber > 1)
 					thisTags["origSDAT"] = finalSDAT.infoSection.SEQrecord.entries[i].sdatNumber;
 

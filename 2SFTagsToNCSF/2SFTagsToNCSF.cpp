@@ -19,7 +19,7 @@ static const std::string TWOSFTAGSTONCSF_VERSION = "1.3";
 enum { UNKNOWN, HELP, VERBOSE, EXCLUDETAG, RENAME };
 const option::Descriptor opts[] =
 {
-	option::Descriptor(UNKNOWN, 0, "", "", option::Arg::None, "2SF Tags to NCSF v" + TWOSFTAGSTONCSF_VERSION + "\nBy Naram Qashat (CyberBotX) [cyberbotx@cyberbotx.com]\n\n"
+	option::Descriptor(UNKNOWN, 0, "", "", option::Arg::None, "2SF Tags to NCSF v" + TWOSFTAGSTONCSF_VERSION + "\nBy Naram Qashat (CyberBotX) [cyberbotx@cyberbotx.com]\nand James Pelster (jpmac26 / CaptainSwag101)\n\n"
 		"2SF Tags to NCSF will copy tags from a 2SF set and place them into the tags of an NCSF set.\n\n"
 		"Usage:\n"
 		"  2SFTagsToNCSF [options] <Input 2SF directory> <Output NCSF directory>\n\n"

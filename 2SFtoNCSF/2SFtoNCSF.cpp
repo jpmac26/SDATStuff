@@ -11,12 +11,12 @@
 #include <tuple>
 #include "NCSF.h"
 
-static const std::string TWOSFTONCSF_VERSION = "1.1";
+static const std::string TWOSFTONCSF_VERSION = "1.2";
 
 enum { UNKNOWN, HELP, VERBOSE, TIME, FADELOOP, FADEONESHOT, EXCLUDETAG };
 const option::Descriptor opts[] =
 {
-	option::Descriptor(UNKNOWN, 0, "", "", option::Arg::None, "2SF to NCSF v" + TWOSFTONCSF_VERSION + "\nBy Naram Qashat (CyberBotX) [cyberbotx@cyberbotx.com]\n\n"
+	option::Descriptor(UNKNOWN, 0, "", "", option::Arg::None, "2SF to NCSF v" + TWOSFTONCSF_VERSION + "\nBy Naram Qashat (CyberBotX) [cyberbotx@cyberbotx.com]\nand James Pelster (jpmac26 / CaptainSwag101)\n\n"
 		"2SF to NCSF will create an NCSF set from a corresponding 2SF set.\n\n"
 		"Usage:\n"
 		"  2SFtoNCSF [options] <Input 2SF directory> [<Output NCSFLIB filename>]\n\n"

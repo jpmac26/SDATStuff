@@ -17,12 +17,12 @@
 
 #include "NCSF.h"
 
-static const std::string SDATTONCSF_VERSION = "1.3";
+static const std::string SDATTONCSF_VERSION = "1.3.1";
 
-enum { UNKNOWN, HELP, VERBOSE, TIME, FADELOOP, FADEONESHOT };
+enum Options { UNKNOWN, HELP, VERBOSE, TIME, FADELOOP, FADEONESHOT, RENAME };
 const option::Descriptor opts[] =
 {
-	option::Descriptor(UNKNOWN, 0, "", "", option::Arg::None, "SDAT to NCSF v" + SDATTONCSF_VERSION + "\nBy Naram Qashat (CyberBotX) [cyberbotx@cyberbotx.com]\n\n"
+	option::Descriptor(UNKNOWN, 0, "", "", option::Arg::None, "SDAT to NCSF v" + SDATTONCSF_VERSION + "\nBy Naram Qashat (CyberBotX) [cyberbotx@cyberbotx.com]\nand James Pelster (jpmac26 / CaptainSwag101)\n\n"
 		"SDAT to NCSF will take the incoming SDAT and create a series of NCSF files. If there is only a single SSEQ within the SDAT, then there will be a "
 			"single NCSF file. Otherwise, there will be an NCSFLIB and multiple MININCSFs.\n\n"
 		"Usage:\n"
@@ -30,10 +30,10 @@ const option::Descriptor opts[] =
 		"Options:"),
 	option::Descriptor(HELP, 0, "h", "help", option::Arg::None, "  --help,-h \tPrint usage and exit."),
 	option::Descriptor(VERBOSE, 0, "v", "verbose", option::Arg::None, "  --verbose,-v \tVerbose output."),
-	option::Descriptor(TIME, 0, "t", "time", RequireNumericArgument,
-		"  --time,-t \tCalculate time on each track to the number of loops given. Defaults to 2 loops. 0 will disable timing."),
+	option::Descriptor(TIME, 0, "t", "time", RequireNumericArgument, "  --time,-t \tCalculate time on each track to the number of loops given. Defaults to 2 loops. 0 will disable timing."),
 	option::Descriptor(FADELOOP, 0, "l", "fade-loop", RequireNumericArgument, "  --fade-loop,-l \tSet the fade time for looping tracks, in seconds, defaults to 10."),
 	option::Descriptor(FADEONESHOT, 0, "o", "fade-one-shot", RequireNumericArgument, "  --fade-one-shot,-o \tSet the fade time for one-shot tracks, in seconds, defaults to 0."),
+	option::Descriptor(RENAME, 0, "r", "rename", option::Arg::None, "  --rename,-r \tPrepend the song number to miniNCSF filenames. Use this if multiple songs share the same filename."),
 	option::Descriptor(UNKNOWN, 0, "", "", option::Arg::None, "\nVerbose output will output the NCSFs created.\n\nTiming uses code based on FeOS Sound System by fincs."),
 	option::Descriptor()
 };
@@ -127,11 +127,17 @@ int main(int argc, char *argv[])
 			{
 				if (!sdat.infoSection.SEQrecord.entryOffsets[i])
 					continue;
-				std::string minincsfFilename = sdat.infoSection.SEQrecord.entries[i].sseq->filename + ".minincsf";
+
+				std::string minincsfFilename;
+				if (options[RENAME])
+					minincsfFilename = sdat.infoSection.SEQrecord.entries[i].sseq->filename + ".minincsf";
+				else
+					minincsfFilename = sdat.infoSection.SEQrecord.entries[i].sseq->origFilename + ".minincsf";
 				auto reservedData = IntToLEVector<uint32_t>(i);
 
 				TagList thisTags = tags;
-				thisTags["origFilename"] = sdat.infoSection.SEQrecord.entries[i].sseq->origFilename;
+				if (options[RENAME])
+					thisTags["origFilename"] = sdat.infoSection.SEQrecord.entries[i].sseq->origFilename;
 
 				if (numberOfLoops)
 					GetTime(minincsfFilename, &sdat, sdat.infoSection.SEQrecord.entries[i].sseq, thisTags, !!options[VERBOSE], numberOfLoops, fadeLoop, fadeOneShot);

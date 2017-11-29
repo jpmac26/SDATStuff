@@ -22,7 +22,7 @@ static const std::string SDATSTRIP_VERSION = "1.2";
 enum { UNKNOWN, HELP, VERBOSE, FORCE, EXCLUDE, INCLUDE };
 const option::Descriptor opts[] =
 {
-	option::Descriptor(UNKNOWN, 0, "", "", option::Arg::None, "SDAT Strip v" + SDATSTRIP_VERSION + "\nBy Naram Qashat (CyberBotX) [cyberbotx@cyberbotx.com]\n\n"
+	option::Descriptor(UNKNOWN, 0, "", "", option::Arg::None, "SDAT Strip v" + SDATSTRIP_VERSION + "\nBy Naram Qashat (CyberBotX) [cyberbotx@cyberbotx.com]\nand James Pelster (jpmac26 / CaptainSwag101)\n\n"
 		"SDAT Strip will remove all duplicated SSEQs, SBNKs, and SWARs from the input SDAT. It will also keep only SBNKs used by the remaining SSEQs and keep "
 			"only SWARs used by the remaining SBNKs. SSARs and STRMs are not kept. Any gaps in the SYMB/INFO sections of the SDAT will also be removed.\n\n"
 		"Usage:\n"

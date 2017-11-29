@@ -1,6 +1,5 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C++ Express 2010
+﻿Microsoft Visual Studio Solution File, Format Version 14.00
+# Visual Studio Community 2017
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "common", "common\common.vcxproj", "{51D9DA16-25BB-43CD-B340-934B5CF8E5F2}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDATStrip", "SDATStrip\SDATStrip.vcxproj", "{642DA5E2-87BC-468D-8148-45F3C1757FF3}"
