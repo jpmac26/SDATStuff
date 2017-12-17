@@ -139,11 +139,11 @@ void SDAT::Read(const std::string &fn, PseudoReadFile &file, bool shouldFailOnMi
 			continue;
 		auto &entry = this->infoSection.SEQrecord.entries[i];
 		uint16_t fileID = entry.fileID;
-		std::string origName = "SSEQ" + NumToHexString(fileID).substr(2), name = origName;
+		std::string origName = "SSEQ" + NumToString(fileID, 3), name = origName;
 		if (this->SYMBOffset)
 		{
 			origName = this->symbSection.SEQrecord.entries[i];
-			name = NumToHexString<uint32_t>(i).substr(6) + " - " + origName;
+			name = NumToString(i, 6) + " - " + origName;
 		}
 		entry.origFilename = origName;
 		entry.sdatNumber = this->filename;
@@ -163,7 +163,7 @@ void SDAT::Read(const std::string &fn, PseudoReadFile &file, bool shouldFailOnMi
 			continue;
 		auto &entry = this->infoSection.BANKrecord.entries[i];
 		uint16_t fileID = entry.fileID;
-		std::string origName = "SBNK" + NumToHexString(fileID).substr(2);
+		std::string origName = "SBNK" + NumToString(fileID, 3);
 		if (this->SYMBOffset)
 			origName = this->symbSection.BANKrecord.entries[i];
 		entry.origFilename = origName;
@@ -184,7 +184,7 @@ void SDAT::Read(const std::string &fn, PseudoReadFile &file, bool shouldFailOnMi
 			continue;
 		auto &entry = this->infoSection.WAVEARCrecord.entries[i];
 		uint16_t fileID = entry.fileID;
-		std::string origName = "SWAR" + NumToHexString(fileID).substr(2);
+		std::string origName = "SWAR" + NumToString(fileID, 3);
 		if (this->SYMBOffset)
 			origName = this->symbSection.WAVEARCrecord.entries[i];
 		entry.origFilename = origName;
@@ -204,7 +204,7 @@ void SDAT::Read(const std::string &fn, PseudoReadFile &file, bool shouldFailOnMi
 		if (!this->infoSection.PLAYERrecord.entryOffsets[i])
 			continue;
 		auto &entry = this->infoSection.PLAYERrecord.entries[i];
-		std::string origName = "PLAYER" + NumToHexString<uint8_t>(i).substr(2);
+		std::string origName = "PLAYER" + NumToString(i, 3);
 		if (this->SYMBOffset)
 			origName = this->symbSection.PLAYERrecord.entries[i];
 		entry.origFilename = origName;
@@ -949,13 +949,13 @@ void SDAT::Strip(const IncOrExc &includesAndExcludes, bool verbose, bool removed
 			auto &infoEntry = this->infoSection.SEQrecord.entries[i];
 			fileID = infoEntry.fileID;
 			if (symbEntry.empty())
-				symbEntry = "SSEQ" + NumToHexString(fileID).substr(2);
+				symbEntry = "SSEQ" + NumToString(fileID, 3);
 			auto sseq = this->GetNonConstSSEQ(infoEntry.sseq);
 			if (sseq != this->SSEQs.end())
 			{
 				(*sseq)->origFilename = symbEntry;
 				if (symbEntry.substr(0, 4) != "SSEQ")
-					(*sseq)->filename = NumToHexString(i).substr(6) + " - " + symbEntry;
+					(*sseq)->filename = NumToString(i, 6) + " - " + symbEntry;
 			}
 		}
 		for (uint32_t i = 0, num = SBNKsToKeep.size(); i < num; ++i)
@@ -964,7 +964,7 @@ void SDAT::Strip(const IncOrExc &includesAndExcludes, bool verbose, bool removed
 			if (!symbEntry.empty())
 				continue;
 			fileID = this->infoSection.BANKrecord.entries[i].fileID;
-			symbEntry = "SBNK" + NumToHexString(fileID).substr(2);
+			symbEntry = "SBNK" + NumToString(fileID, 3);
 		}
 		for (uint32_t i = 0, num = SWARsToKeep.size(); i < num; ++i)
 		{
@@ -972,14 +972,14 @@ void SDAT::Strip(const IncOrExc &includesAndExcludes, bool verbose, bool removed
 			if (!symbEntry.empty())
 				continue;
 			fileID = this->infoSection.WAVEARCrecord.entries[i].fileID;
-			symbEntry = "SWAR" + NumToHexString(fileID).substr(2);
+			symbEntry = "SWAR" + NumToString(fileID, 3);
 		}
 		for (uint32_t i = 0, num = PLAYERsToKeep.size(); i < num; ++i)
 		{
 			auto &symbEntry = this->symbSection.PLAYERrecord.entries[i];
 			if (!symbEntry.empty())
 				continue;
-			symbEntry = "PLAYER" + NumToHexString<uint8_t>(i).substr(2);
+			symbEntry = "PLAYER" + NumToString(i, 3);
 		}
 
 		this->symbSectionNeedsCleanup = false;

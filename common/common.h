@@ -417,6 +417,21 @@ template<typename T> inline std::string NumToHexString(const T &num)
 	return "0x" + hex;
 }
 
+/*
+* The following function is used to convert an integer into a normal string,
+* the length being determined by the size of the integer or the "padTo" value,
+* whichever is larger.  8-bit integers are in the format of 0x00,
+* 16-bit integers are in the format of 0x0000, and so on.
+*/
+template<typename T> inline std::string NumToString(const T &num, int padTo)
+{
+	std::string str;
+	str = std::to_string(num);
+	if (padTo > str.size())
+		str.insert(0, padTo - str.size(), '0');
+	return str;
+}
+
 template<typename T1, typename T2> inline void clamp(T1 &valueToClamp, const T2 &minValue, const T2 &maxValue)
 {
 	if (valueToClamp < minValue)

@@ -294,8 +294,9 @@ int main(int argc, char *argv[])
 				if (options[VERBOSE])
 					std::cout << "Found SDAT with " << sdat.infoSection.SEQrecord.actualCount << " SSEQ" << (sdat.infoSection.SEQrecord.actualCount == 1 ? "" : "s") << ".\n";
 			}
-			catch (const std::exception &)
+			catch (const std::exception &e)
 			{
+				std::cout << e.what() << std::endl;
 				--sdatNumber;
 			}
 			fileData.startOffset = 0;
